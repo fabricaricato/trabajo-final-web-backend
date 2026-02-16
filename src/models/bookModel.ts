@@ -1,5 +1,5 @@
-import { model, Schema } from "mongoose";
-import { IBook } from "../interfaces/IBook";
+import { model, Schema } from "mongoose"
+import { IBook } from "../interfaces/IBook"
 
 const BookSchema = new Schema<IBook>({
   title: {
