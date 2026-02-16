@@ -19,6 +19,7 @@ server.listen(PORT, () => {
     connectDb()
     console.log(`Server listening on port: ${PORT}`)
   } catch (error) {
-    console.log(`Port listening failure`)
+    const err = error as Error
+    console.log(`Port listening failure, error message: ${err.message}`)
   }
 })

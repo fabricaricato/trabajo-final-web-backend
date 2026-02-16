@@ -1,0 +1,16 @@
+meta {
+  name: deleteBook
+  type: http
+  seq: 4
+}
+
+delete {
+  url: http://localhost:2000/api/books/6992d15eb7d370337fabbc11
+  body: json
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

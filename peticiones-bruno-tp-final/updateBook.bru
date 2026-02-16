@@ -1,0 +1,22 @@
+meta {
+  name: updateBook
+  type: http
+  seq: 3
+}
+
+patch {
+  url: http://localhost:2000/api/books/6992d043b7d370337fabbc0d
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "pages": 1000
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

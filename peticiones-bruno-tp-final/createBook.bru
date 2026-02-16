@@ -1,0 +1,26 @@
+meta {
+  name: createBook
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:2000/api/books
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "title": "Book tester",
+    "author": "tester",
+    "date": "1923-01-01",
+    "genre": ["Adventure"],
+    "pages": 2
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
