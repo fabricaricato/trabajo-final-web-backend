@@ -3,8 +3,6 @@ import { Request, Response } from 'express'
 import { bookValidate, partialBookValidate } from "../validators/bookValidate"
 import mongoose from "mongoose"
 
-// const URI_DB = process.env.URI_DB 
-
 const getBooks = async (req: Request, res: Response) => {
   try {
     const books = await Book.find()

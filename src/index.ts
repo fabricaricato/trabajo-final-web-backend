@@ -14,8 +14,8 @@ const server = express()
 server.use(cors())
 server.use(express.json())
 
-server.use('/api/books', bookRouter)
-server.use('/api/auth', validateToken, authRouter)
+server.use('/api/books', validateToken, bookRouter)
+server.use('/api/auth', authRouter)
 
 server.listen(PORT, () => {
   try {

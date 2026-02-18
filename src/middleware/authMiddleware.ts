@@ -16,7 +16,7 @@ const validateToken = async (req: IRequestWithUser, res: Response, next: NextFun
     } else {
 
       if (!header.startsWith("Bearer")) {
-        return res.status(401).json({ success: false, error: "el token debe ser formato jwt" })
+        return res.status(401).json({ success: false, error: "The token must be in jwt format" })
       } else {
         const token = header.split(' ')[1]
         console.log(token)
