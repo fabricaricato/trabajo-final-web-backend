@@ -77,7 +77,7 @@ src/
 
    ```bash
    git clone <repository-url>
-   cd trabajo-final-backend
+   cd book-management-api
    ```
 
 2. **Install dependencies**
