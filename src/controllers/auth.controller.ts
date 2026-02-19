@@ -24,7 +24,6 @@ const register = async (req: Request, res: Response) => {
       } else {
         const hash = await bcryptjs.hash(password, 10)
         const newUser = await User.create({ username, email, password: hash })
-        console.log('new user -->', newUser)
         return res.status(201).json({success: true, data: "User registered successfully!"})
       }
     }
