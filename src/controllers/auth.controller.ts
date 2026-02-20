@@ -12,7 +12,7 @@ const JWT_SECRET = process.env.JWT_SECRET as string
 const register = async (req: Request, res: Response) => {
   try {
     const body = req.body
-    const { email, username, password } = body
+    const { email, username, password, role } = body
     const validation = userValidate.safeParse(body)
     
     if (!validation.success) {
@@ -23,7 +23,7 @@ const register = async (req: Request, res: Response) => {
         return res.status(400).json({success: false, message: "Email already registered, please login with it."})
       } else {
         const hash = await bcryptjs.hash(password, 10)
-        const newUser = await User.create({ username, email, password: hash })
+        const newUser = await User.create({ username, email, password: hash, role })
         return res.status(201).json({success: true, data: "User registered successfully!"})
       }
     }

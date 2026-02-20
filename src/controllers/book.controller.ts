@@ -9,6 +9,10 @@ const getBooks = async (req: IRequestWithUser, res: Response) => {
     const { author, genre, minPages } = req.query
     const filter: any = {}
 
+    if (req.user?.role !== 'admin') {
+      filter.user = req.user?._id
+    }
+
     if (author) {
       filter.author = { $regex: author, $options: 'i' }
     }
@@ -67,8 +71,17 @@ const updateBook = async (req: IRequestWithUser, res: Response) => {
           error: "ID error, please verify your ID input"
         })
       }
-      const updatedBook = await Book.findByIdAndUpdate(id, validation.data, { new: true })
-      return res.status(201).json({success: true, data: updatedBook})
+      const updatedBook = await Book.findOneAndUpdate(
+        { _id: id, user: req.user?._id },
+        validation.data,
+        { returnDocument: 'after' }
+      )
+
+      if (!updatedBook) {
+        return res.status(404).json({ success: false, error: "Book not found or you don't have permission" })
+      }
+
+      return res.status(200).json({success: true, data: updatedBook})
     }
   } catch (error) {
     const err = error as Error
@@ -86,7 +99,7 @@ const deleteBook = async (req: IRequestWithUser, res: Response) => {
         error: "ID error, please verify your ID input"
       })
     } else {
-      const deletedBook = await Book.findByIdAndDelete(id)
+      const deletedBook = await Book.findOneAndDelete({ _id: id, user: req.user?._id })
 
       if (!deletedBook) {
         return res.status(404).json({ success: false, error: "Book not found in database" })
