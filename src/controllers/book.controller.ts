@@ -4,7 +4,7 @@ import { bookValidate, partialBookValidate } from "../validators/bookValidate"
 import { IRequestWithUser } from "../interfaces/IRequestWithUser"
 import mongoose from "mongoose"
 
-const getBooks = async (req: Request, res: Response) => {
+const getBooks = async (req: IRequestWithUser, res: Response) => {
   try {
     const { author, genre, minPages } = req.query
     const filter: any = {}
@@ -52,15 +52,21 @@ const createBook = async (req: IRequestWithUser, res: Response) => {
   }
 }
 
-const updateBook = async (req: Request, res: Response) => {
+const updateBook = async (req: IRequestWithUser, res: Response) => {
   try {
-    const id = req.params.id
+    const id = req.params.id as string
     const updates = req.body
     const validation = partialBookValidate.safeParse(updates)
 
     if (!validation.success) {
       return res.status(400).json({ success: false, error: validation.error.flatten().fieldErrors })
     } else {
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({
+          success: false,
+          error: "ID error, please verify your ID input"
+        })
+      }
       const updatedBook = await Book.findByIdAndUpdate(id, validation.data, { new: true })
       return res.status(201).json({success: true, data: updatedBook})
     }
@@ -70,7 +76,7 @@ const updateBook = async (req: Request, res: Response) => {
   }
 }
 
-const deleteBook = async (req: Request, res: Response) => {
+const deleteBook = async (req: IRequestWithUser, res: Response) => {
   try {
     const id = req.params.id as string
 

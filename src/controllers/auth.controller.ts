@@ -37,19 +37,23 @@ const login = async (req: Request, res: Response) => {
   try {
     const body = req.body
     const { email, password } = body
+    const validation = userValidate.safeParse(body)
     
-    const foundUser = await User.findOne({ email })
-    if (!foundUser) {
-      return res.status(400).json({success: false, message: "User not found in database."})
+    if (!validation.success) {
+      return res.status(400).json({ success: false, error: validation.error.flatten().fieldErrors })
     } else {
-      const validatePassword = await bcryptjs.compare(password, foundUser.password)
-
-      if (!validatePassword) {
-        res.status(400).json({success: false, error: "Invalid login details, please try again"})
+      const foundUser = await User.findOne({ email })
+      if (!foundUser) {
+        return res.status(400).json({success: false, message: "User not found in database."})
       } else {
-        const payload: IPayload = { _id: foundUser._id, username: foundUser.username, email: foundUser.email, role: foundUser.role }
-        const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '10m' })
-        return res.status(200).json({success: true, token})
+        const validatePassword = await bcryptjs.compare(password, foundUser.password)
+        if (!validatePassword) {
+          return res.status(400).json({success: false, error: "Invalid login details, please try again"})
+        } else {
+          const payload: IPayload = { _id: foundUser._id, username: foundUser.username, email: foundUser.email, role: foundUser.role }
+          const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '10m' })
+          return res.status(200).json({success: true, token})
+        }
       }
     }
   } catch (error) {
